@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: mutual_subscribers_bot_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+#  bot:
+#    build: .
+#    container_name: mutual_subscribers_bot
+#    restart: no
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    env_file:
+#      - .env
+#    command: [ "java", "-Xms1024m", "-jar", "/app/app.jar" ]
+#    networks:
+#      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

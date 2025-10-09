@@ -1,0 +1,10 @@
+package rt.bot.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import rt.bot.entity.BotUser;
+
+@Repository
+public interface UserRepository extends JpaRepository<BotUser, Long> {
+
+}
