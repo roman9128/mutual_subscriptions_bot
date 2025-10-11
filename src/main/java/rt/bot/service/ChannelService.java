@@ -8,8 +8,11 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Channel;
-import rt.bot.repo.ChannelRepository;
-import rt.bot.repo.UserRepository;
+import rt.bot.repository.ChannelRepository;
+import rt.bot.repository.UserRepository;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -25,14 +28,10 @@ public class ChannelService {
         if (channelRepository.existsById(channelId)) {
             channelRepository.updateBotIsAdmin(channelId, true);
             log.info("Бот назначен админом в канале с id {}", channelId);
-            return;
         }
-        BotUser botUser = userRepository.findById(user.getId()).orElse(null);
-        if (botUser == null) {
-            log.error("Пользователь с id {} не найден в базе данных", user.getId());
-            return;
-        }
+    }
 
+    public void createNewChannel(BotUser botUser, Chat chat) {
         Channel channel = new Channel();
         channel.setChannelId(chat.getId());
         channel.setTitle(chat.getTitle());
@@ -40,9 +39,25 @@ public class ChannelService {
         channel.setOwner(botUser);
         channel.setBotIsAdmin(true);
         channel.setTariff(botUser.getTariff());
-        channel.setSubscriptionsAmountGoal(botUser.getTariff().getSubscriptionAmountGoal());
+        channel.addSubscriptionAmountGoal(botUser.getTariff().getSubscriptionAmountGoal());
 
         channelRepository.save(channel);
-        log.info("В базу данных добавлен новый канал с id {} и бот назначен админом в нём", chat.getId());
+        log.info("В базу данных добавлен канал {} и бот назначен админом в нём", chat.getTitle());
+    }
+
+    @Transactional
+    public void setPaidSince(Long userId) {
+        channelRepository.updatePaidSinceForUserChannels(userId, LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+    }
+
+    @Transactional
+    public void removeCancelledChannel(Long userId) {
+        channelRepository.deleteByOwnerUserIdAndPaidSinceIsNull(userId);
+    }
+
+    public boolean channelExists(Long channelId) {
+        boolean result = channelRepository.existsById(channelId);
+        log.info("Канал с id {} существует: {}", channelId, result);
+        return result;
     }
 }

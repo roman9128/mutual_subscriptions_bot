@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Tariff;
-import rt.bot.repo.UserRepository;
+import rt.bot.repository.UserRepository;
 
 import java.util.Optional;
 

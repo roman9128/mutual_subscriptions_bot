@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberLeft;
 import rt.bot.telegram.constants.Text;
 
 @Slf4j
@@ -44,12 +46,13 @@ public class TelegramUtils {
                 extractUserIdFromUpdate(update) != null);
     }
 
-    public static boolean isChatMemberUpdate(Update update) {
-        return update.hasChatMember() ||
-                update.hasMyChatMember();
+    public static boolean botIsAddedAsAdmin(Update update) {
+        return update.hasMyChatMember() &&
+                update.getMyChatMember().getNewChatMember() instanceof ChatMemberAdministrator;
     }
 
-    public static String getChatNameFromLink(String link) {
-        return "@" + link.substring(Text.LINK_BASE.length());
+    public static boolean botIsDismissed(Update update) {
+        return update.hasMyChatMember() &&
+                update.getMyChatMember().getNewChatMember() instanceof ChatMemberLeft;
     }
 }

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Tariff;
-import rt.bot.repo.UserRepository;
+import rt.bot.repository.UserRepository;
 
 @Slf4j
 @Service

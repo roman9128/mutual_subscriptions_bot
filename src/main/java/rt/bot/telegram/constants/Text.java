@@ -72,16 +72,22 @@ public class Text {
             Если пользователь первого тарифа нарушает правила, то для него в последствии будет недоступен этот тариф.
             Если пользователь второго тарифа нарушает правила, то для возврата в базу и возврат подписок ему нужно будет заново оплатить подписку.
             Бот будет присылать вам каналы тех пользователей, от которых вы можете отписываться, в новую подборку они попадать уже не будут.""";
+    public static final String TARIFF_UNAVAILABLE = "Данный тариф сейчас недоступен. Выберите другой, пожалуйста";
     public static final String PAYMENT_LINK = "Для оплаты перейдите по данной ссылке: %s";
-    public static final String PAYMENT_CONFIRM = "Оплачено";
+    public static final String PAYMENT_CONFIRM = "Подтвердить оплату";
     public static final String PAYMENT_CANCEL = "Отменить оплату";
-    public static final String PAYMENT_CANCEL_SUCCESS = "Вы отказались от оплаты";
-    public static final String LINK_REQUEST = "Пришлите ссылку на Ваш канал в формате https://t.me/название";
-    public static final String LINK_BASE = "https://t.me/";
-    public static final String LINK_PATTERN = "^https://t\\.me/[a-zA-Z0-9_]{5,32}$";
     public static final String ADD_BOT_AS_ADMIN_DESC = "Добавьте бота в Ваш канал в качестве администратора, чтобы он мог отслеживать прирост подписчиков. Это безопасно";
     public static final String ADD_BOT_AS_ADMIN = "Добавьте бота в канал";
+    public static final String CHANNEL_ADDED_EARLY = "Данный канал был добавлен в нашу базу ранее";
+    public static final String CHANNEL_ADDED = "Бот назначен админом в канал %s";
+    public static final String SUBSCRIPTION_REQUIRED = "Теперь Вам нужно подписаться на следующие каналы:\n%s";
+    public static final String SUBSCRIPTION_CONFIRMATION = "Подтвердить подписку";
+    public static final String CANCEL_PARTICIPATION_SUCCESS = "Регистрация Вашего канала отменена";
+    public static final String CANCEL_DUE_TO_LACK_OF_CHANNELS = "Регистрация Вашего канала отменена в связи с отсутствием доступных каналов для подписки. Попробуйте позже или обратитесь к админу бота";
+    public static final String CANCEL_PARTICIPATION = "Отказаться";
     public static final String SUCCESS = "Наслаждайтесь, после проверки выполнения условий Вас добавят в папку подписок, всем участникам придёт уведомление и Вы получите быстрый прирост подписчиков из настоящих живых людей.";
-    public static final String CHANNEL_ADDED_EARLY = "Данный канал был добавлен ранее";
-    public static final String CHANNEL_ADDED = "Бот добавлен админом в канал %s";
+    public static final String ERR_ADD_BOT = "Вам нужно добавить бота админом в Ваш канал, чтобы продолжить. Для этого нажмите на кнопку под соответствующим сообщением";
+    public static final String ERR_SUBSCRIPTION = "Вам нужно подтвердить подписку на каналы из направленного списка, чтобы продолжить. Для этого нажмите на соответствующую кнопку во всплывающей клавиатуре";
+    public static final String ERR_PAYMENT = "Чуть ранее Вам направлялась ссылка для оплаты. Если Вы оплатили, то нажмите на соответствующую кнопку во всплывающей клавиатуре";
+    public static final String UNKNOWN_ERR = "Непредвиденная ошибка. Обратитесь к админу бота";
 }

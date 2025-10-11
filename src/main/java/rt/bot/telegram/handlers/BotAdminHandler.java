@@ -10,6 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministr
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberLeft;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberUpdated;
 import rt.bot.service.ChannelService;
+import rt.bot.telegram.client.MessageSender;
+import rt.bot.telegram.constants.Text;
 
 @Slf4j
 @Component
@@ -17,6 +19,7 @@ import rt.bot.service.ChannelService;
 public class BotAdminHandler {
 
     private final ChannelService channelService;
+    private final MessageSender sender;
 
     public void process(Update update) {
         ChatMemberUpdated cmu = update.getMyChatMember();
@@ -31,6 +34,7 @@ public class BotAdminHandler {
 
     private void handleBotAssigned(Chat chat, User user) {
         channelService.addBotAsAdminToChannel(user, chat);
+        sender.send(user.getId(), Text.CHANNEL_ADDED.formatted(chat.getTitle()));
         log.info("Бот добавлен админом в канал {}", chat.getTitle());
     }
 

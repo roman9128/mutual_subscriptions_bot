@@ -26,6 +26,25 @@ public class Menu {
                 ))).build();
     }
 
+    public static InlineKeyboardMarkup buttonFor(String text) {
+        return InlineKeyboardMarkup.builder()
+                .keyboard(new ArrayList<>(List.of(
+                        new InlineKeyboardRow(List.of(
+                                InlineKeyboardButton.builder()
+                                        .text(text)
+                                        .callbackData(text)
+                                        .build()))
+                ))).build();
+    }
+
+    public static InlineKeyboardMarkup combineMenus(InlineKeyboardMarkup... keyboards) {
+        List<InlineKeyboardRow> rows = new ArrayList<>();
+        for (InlineKeyboardMarkup keyboard : keyboards) {
+            rows.addAll(keyboard.getKeyboard());
+        }
+        return new InlineKeyboardMarkup(rows);
+    }
+
     public static ReplyKeyboardMarkup getTariffMenu() {
         KeyboardRow row1 = new KeyboardRow(new KeyboardButton(Text.TARIFF_1_REQUEST));
         KeyboardRow row2 = new KeyboardRow(new KeyboardButton(Text.TARIFF_2_REQUEST));

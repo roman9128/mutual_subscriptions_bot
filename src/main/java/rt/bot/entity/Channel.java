@@ -37,4 +37,8 @@ public class Channel {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     private LocalDateTime paidSince;
+
+    public void addSubscriptionAmountGoal(int value) {
+        subscriptionsAmountGoal += value;
+    }
 }

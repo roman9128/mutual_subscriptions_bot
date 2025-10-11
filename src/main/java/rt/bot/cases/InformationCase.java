@@ -1,4 +1,4 @@
-package rt.bot.telegram.cases;
+package rt.bot.cases;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
