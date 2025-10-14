@@ -13,12 +13,14 @@ public class UpdateClassifier {
         if (isTariffProcess(update, botUser)) return UpdateClass.START_PROCESS;
         else return UpdateClass.INFO_REQUEST;
     }
-//todo infoprocess conditions
+
+    //todo infoprocess conditions
     private static boolean isTariffProcess(Update update, BotUser botUser) {
         String userMsg = TelegramUtils.extractUserTextFromUpdate(update);
         return userMsg.equals(Text.TARIFF_1_START) ||
                 userMsg.equals(Text.TARIFF_2_START) ||
                 userMsg.equals(Text.TARIFF_3_START) ||
+                userMsg.equals(Text.START_VIP) ||
                 botUser.getDialogStatus() != BotUser.DialogStatus.NONE;
     }
 }

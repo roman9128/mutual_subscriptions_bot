@@ -32,8 +32,12 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
             "    SELECT COUNT(s) FROM Subscription s " +
             "    WHERE s.channel = c AND s.status = 'FOLLOWED'" +
             ") " +
-            "AND c.owner != :user")
-    List<Channel> findChannelsForSubscriptionNotOwnedBy(@Param("user") BotUser user);
+            "AND c.owner != :user " +
+            "AND c NOT IN (" +
+            "    SELECT s.channel FROM Subscription s " +
+            "    WHERE s.user = :user" +
+            ")")
+    List<Channel> findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(@Param("user") BotUser user);
 
     List<Channel> findByOwner(BotUser owner);
 }

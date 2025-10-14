@@ -3,6 +3,8 @@ package rt.bot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import rt.bot.dto.ChannelStatus;
+import rt.bot.dto.ChannelStatusLists;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Channel;
 import rt.bot.entity.Subscription;
@@ -10,6 +12,8 @@ import rt.bot.entity.Tariff;
 import rt.bot.repository.ChannelRepository;
 import rt.bot.repository.SubscriptionRepository;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +25,24 @@ public class SubscriptionService {
     private final ChannelRepository channelRepository;
     private final SubscriptionRepository subscriptionRepository;
 
+    public ChannelStatusLists getChannelStatusList(Long userId) {
+        List<ChannelStatus> all = subscriptionRepository.findChannelStatusBy(userId);
+        List<ChannelStatus> followed = new ArrayList<>();
+        List<ChannelStatus> unfollowed = new ArrayList<>();
+
+        for (ChannelStatus dto : all) {
+            if (dto.status() == Subscription.Status.FOLLOWED) {
+                followed.add(dto);
+            } else {
+                unfollowed.add(dto);
+            }
+        }
+        return new ChannelStatusLists(followed, unfollowed);
+    }
+
     public String getChannelListToSubscribe(BotUser botUser) {
         List<Channel> channelsToSend = channelRepository
-                .findChannelsForSubscriptionNotOwnedBy(botUser)
+                .findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(botUser)
                 .stream()
                 .limit(getSubscriptionsAmountToAdd(botUser))
                 .toList();
@@ -56,6 +75,7 @@ public class SubscriptionService {
                 .map(Channel::getTariff)
                 .mapToLong(Tariff::getSubscriptionAmountInReturn)
                 .sum();
-        return subscriptionsAmountUserMustHave - subscriptionsAmountUserHas;
+        long amount = subscriptionsAmountUserMustHave - subscriptionsAmountUserHas;
+        return Math.max(0, amount);
     }
 }

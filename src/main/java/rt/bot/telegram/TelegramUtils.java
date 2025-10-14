@@ -41,6 +41,10 @@ public class TelegramUtils {
         }
     }
 
+    public static String getChatNameFromLink(String link) {
+        return "@" + link.substring(Text.LINK_BASE.length());
+    }
+
     public static boolean isValidUpdate(Update update) {
         return (extractUserFromUpdate(update) != null &&
                 extractUserIdFromUpdate(update) != null);

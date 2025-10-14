@@ -43,10 +43,14 @@ public class BotUser {
     private LocalDateTime updatedAt;
 
     public enum Role {
-        USER, ADMIN, REMOVED
+        ADMIN, GUEST, USER, REMOVED
     }
 
     public enum DialogStatus {
-        NONE, WAITING_ADD_BOT_AS_ADMIN, WAITING_SUBSCRIPTION_CONFIRMATION, WAITING_PAYMENT_CONFIRMATION
+        NONE,
+        WAITING_CHANNEL_LINK,
+        WAITING_ADD_BOT_AS_ADMIN,
+        WAITING_SUBSCRIPTION_CONFIRMATION,
+        WAITING_PAYMENT_CONFIRMATION
     }
 }

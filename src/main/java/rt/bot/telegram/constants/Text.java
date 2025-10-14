@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Text {
 
+    public static final String START_AGAIN = "Начать заново";
     public static final String START = "/start";
     public static final String GREET = """
             *Привет\\! Это бот по взаимным подпискам живых настоящих людей\\.*
@@ -60,6 +61,7 @@ public class Text {
     public static final String TARIFF_1_START = "Хочу начать первый тариф";
     public static final String TARIFF_2_START = "Хочу начать второй тариф";
     public static final String TARIFF_3_START = "Хочу начать третий тариф";
+    public static final String START_VIP = "Добавить VIP канал";
     public static final String TARIFF_SELECTED = "Тариф выбран";
     public static final String TARIFF_NOT_SELECTED = "Тариф не выбран";
     public static final String LEARN_ANOTHER_TARIFF_REQUEST = "Узнать про другой тариф";
@@ -75,7 +77,6 @@ public class Text {
     public static final String TARIFF_UNAVAILABLE = "Данный тариф сейчас недоступен. Выберите другой, пожалуйста";
     public static final String PAYMENT_LINK = "Для оплаты перейдите по данной ссылке: %s";
     public static final String PAYMENT_CONFIRM = "Подтвердить оплату";
-    public static final String PAYMENT_CANCEL = "Отменить оплату";
     public static final String ADD_BOT_AS_ADMIN_DESC = "Добавьте бота в Ваш канал в качестве администратора, чтобы он мог отслеживать прирост подписчиков. Это безопасно";
     public static final String ADD_BOT_AS_ADMIN = "Добавьте бота в канал";
     public static final String CHANNEL_ADDED_EARLY = "Данный канал был добавлен в нашу базу ранее";
@@ -83,11 +84,28 @@ public class Text {
     public static final String SUBSCRIPTION_REQUIRED = "Теперь Вам нужно подписаться на следующие каналы:\n%s";
     public static final String SUBSCRIPTION_CONFIRMATION = "Подтвердить подписку";
     public static final String CANCEL_PARTICIPATION_SUCCESS = "Регистрация Вашего канала отменена";
+    public static final String FAILED_PARTICIPATION_DUE_TO_BOT_ADMIN_RIGHTS = "Регистрация Вашего канала отменена, так как бот был лишён прав админа";
     public static final String CANCEL_DUE_TO_LACK_OF_CHANNELS = "Регистрация Вашего канала отменена в связи с отсутствием доступных каналов для подписки. Попробуйте позже или обратитесь к админу бота";
     public static final String CANCEL_PARTICIPATION = "Отказаться";
     public static final String SUCCESS = "Наслаждайтесь, после проверки выполнения условий Вас добавят в папку подписок, всем участникам придёт уведомление и Вы получите быстрый прирост подписчиков из настоящих живых людей.";
+    public static final String SUCCESS_VIP = "VIP канал добавлен";
+    public static final String MY_SUBSCRIPTIONS = "Мои подписки";
+    public static final String MY_SUBSCRIPTIONS_DETAILED = """
+            Мои подписки:
+            %s
+            
+            Мне нужно подписаться:
+            %s
+            
+            Информация в этом разделе обновляется не сразу и может быть неточной
+            """;
     public static final String ERR_ADD_BOT = "Вам нужно добавить бота админом в Ваш канал, чтобы продолжить. Для этого нажмите на кнопку под соответствующим сообщением";
     public static final String ERR_SUBSCRIPTION = "Вам нужно подтвердить подписку на каналы из направленного списка, чтобы продолжить. Для этого нажмите на соответствующую кнопку во всплывающей клавиатуре";
     public static final String ERR_PAYMENT = "Чуть ранее Вам направлялась ссылка для оплаты. Если Вы оплатили, то нажмите на соответствующую кнопку во всплывающей клавиатуре";
+    public static final String ERR_LINK = "Некорректная ссылка. Попробуй ещё раз";
     public static final String UNKNOWN_ERR = "Непредвиденная ошибка. Обратитесь к админу бота";
+    public static final String LINK_REQUEST = "Пришли ссылку на канал в формате https://t.me/название";
+    public static final String LINK_BASE = "https://t.me/";
+    public static final String LINK_PATTERN = "^https://t\\.me/[a-zA-Z0-9_]{5,32}$";
+    public static final String NO_INFO = "Пока нет информации";
 }

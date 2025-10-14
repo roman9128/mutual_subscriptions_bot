@@ -1,6 +1,5 @@
 package rt.bot.telegram.client;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
+import rt.bot.base.BotInfo;
 
 @Slf4j
 @Component
@@ -17,16 +17,10 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class AdminChecker {
 
     private final TelegramClient telegramClient;
-    private Long botUserId;
-
-    @PostConstruct
-    public void setBotUserId() {
-        botUserId = getBotUserId();
-        log.info("Telegram Bot ID получен: {}", botUserId);
-    }
+    private final BotInfo botInfo;
 
     public boolean checkBotAdminRights(Long channelId) {
-        if (botUserId == null) {
+        if (botInfo.getBotUserId() == null) {
             return false;
         }
         return isBotChannelAdmin(channelId);
@@ -45,7 +39,7 @@ public class AdminChecker {
         try {
             GetChatMember getChatMember = GetChatMember.builder()
                     .chatId(channelId)
-                    .userId(botUserId)
+                    .userId(botInfo.getBotUserId())
                     .build();
 
             ChatMember chatMember = telegramClient.execute(getChatMember);
@@ -58,11 +52,6 @@ public class AdminChecker {
     }
 
     private boolean isAdmin(ChatMember chatMember) {
-        if (chatMember instanceof ChatMemberAdministrator admin) {
-            return admin.getStatus().equals("administrator");
-        }
-
-        String status = chatMember.getStatus();
-        return status.equals("administrator");
+        return chatMember instanceof ChatMemberAdministrator;
     }
 }

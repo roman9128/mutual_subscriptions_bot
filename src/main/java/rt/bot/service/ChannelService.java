@@ -45,6 +45,20 @@ public class ChannelService {
         log.info("В базу данных добавлен канал {} и бот назначен админом в нём", chat.getTitle());
     }
 
+    public void createNewVipChannel(BotUser botUser, Chat chat) {
+        Channel channel = new Channel();
+        channel.setChannelId(chat.getId());
+        channel.setTitle(chat.getTitle());
+        channel.setUsername(chat.getUserName());
+        channel.setOwner(botUser);
+        channel.setTariff(botUser.getTariff());
+        channel.setPaidSince(LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+        channel.addSubscriptionAmountGoal(botUser.getTariff().getSubscriptionAmountGoal());
+
+        channelRepository.save(channel);
+        log.info("В базу данных добавлен VIP канал {}", chat.getTitle());
+    }
+
     @Transactional
     public void setPaidSince(Long userId) {
         channelRepository.updatePaidSinceForUserChannels(userId, LocalDateTime.now(ZoneId.of("Europe/Moscow")));

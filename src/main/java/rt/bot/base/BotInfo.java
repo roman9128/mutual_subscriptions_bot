@@ -22,13 +22,13 @@ public class BotInfo {
     private final TelegramClient telegramClient;
 
     @PostConstruct
-    public void setBotUserId() {
-        botUserId = getBotUserId();
+    public void init() {
+        botUserId = gainBotUserId();
         log.info("Telegram Bot ID: {}", botUserId);
         log.info("Telegram Bot name: {}", botName);
     }
 
-    private Long getBotUserId() {
+    private Long gainBotUserId() {
         try {
             return telegramClient.execute(GetMe.builder().build()).getId();
         } catch (TelegramApiException e) {

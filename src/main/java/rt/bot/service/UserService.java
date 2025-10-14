@@ -14,19 +14,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void setUserRole(Long userId, BotUser.Role role) {
-        BotUser botUser = userRepository.findById(userId).orElse(null);
-        if (botUser != null) {
-            botUser.setRole(role);
-            userRepository.save(botUser);
-            log.info("Изменил роль пользователя с id {} на {}", userId, role);
-        } else {
-            log.error("Не удалось найти пользователя в базе данных по id {} и изменить его роль на {}", userId, role);
-        }
-    }
-
-    public BotUser getBotUserById(Long userId) {
-        return userRepository.findById(userId).orElse(null);
+    public void setUserRole(BotUser botUser, BotUser.Role role) {
+        botUser.setRole(role);
+        userRepository.save(botUser);
+        log.info("Изменил роль пользователя с id {} на {}", botUser.getUserId(), role);
     }
 
     public void setLastMessageIdToDelete(BotUser botUser, int messageId) {
@@ -52,5 +43,13 @@ public class UserService {
         botUser.setDialogStatus(dialogStatus);
         userRepository.save(botUser);
         log.info("Изменил пользователю с id {} тариф на {} и статус на {}", botUser.getUserId(), tariff, dialogStatus);
+    }
+
+    public void setRoleTariffStatus(BotUser botUser, BotUser.Role role, Tariff tariff, BotUser.DialogStatus dialogStatus) {
+        botUser.setRole(role);
+        botUser.setTariff(tariff);
+        botUser.setDialogStatus(dialogStatus);
+        userRepository.save(botUser);
+        log.info("Изменил пользователю с id {} роль на {}, тариф на {} и статус на {}", botUser.getUserId(), role, tariff, dialogStatus);
     }
 }

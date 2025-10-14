@@ -28,7 +28,7 @@ public class UserAuthentication {
             botUser.setTelegramFirstName(tgUserFromUpdate.getFirstName());
             botUser.setTelegramLastName(tgUserFromUpdate.getLastName());
             botUser.setTelegramUsername(tgUserFromUpdate.getUserName());
-            botUser.setRole(BotUser.Role.USER);
+            botUser.setRole(BotUser.Role.GUEST);
             botUser.setDialogStatus(BotUser.DialogStatus.NONE);
             botUser.setTariff(Tariff.NONE);
             return userRepository.save(botUser);
