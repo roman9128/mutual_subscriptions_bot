@@ -1,4 +1,4 @@
-package rt.bot.telegram;
+package rt.bot.telegram.in;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberLeft;
-import rt.bot.telegram.constants.Text;
+import rt.bot.constant.Text;
 
 @Slf4j
 @UtilityClass

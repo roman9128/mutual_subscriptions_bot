@@ -1,9 +1,8 @@
-package rt.bot.telegram.client;
+package rt.bot.telegram.out;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.GetMe;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator;
@@ -24,15 +23,6 @@ public class AdminChecker {
             return false;
         }
         return isBotChannelAdmin(channelId);
-    }
-
-    private Long getBotUserId() {
-        try {
-            return telegramClient.execute(GetMe.builder().build()).getId();
-        } catch (TelegramApiException e) {
-            log.error("Ошибка при получении ID бота: {}", e.getMessage());
-            return null;
-        }
     }
 
     private boolean isBotChannelAdmin(Long channelId) {

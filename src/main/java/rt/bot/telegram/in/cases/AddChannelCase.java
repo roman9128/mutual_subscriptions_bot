@@ -1,4 +1,4 @@
-package rt.bot.cases;
+package rt.bot.telegram.in.cases;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,19 +11,19 @@ import rt.bot.entity.Tariff;
 import rt.bot.service.ChannelService;
 import rt.bot.service.SubscriptionService;
 import rt.bot.service.UserService;
-import rt.bot.telegram.TelegramUtils;
-import rt.bot.telegram.client.MessageRemover;
-import rt.bot.telegram.client.MessageSender;
-import rt.bot.telegram.constants.Menu;
-import rt.bot.telegram.constants.Text;
-import rt.bot.telegram.handlers.BotAdminHandler;
-import rt.bot.telegram.handlers.TariffAvailabilityHandler;
-import rt.bot.telegram.handlers.VipChannelHandler;
+import rt.bot.telegram.in.TelegramUtils;
+import rt.bot.telegram.out.MessageRemover;
+import rt.bot.telegram.out.MessageSender;
+import rt.bot.constant.Menu;
+import rt.bot.constant.Text;
+import rt.bot.telegram.handler.BotAdminHandler;
+import rt.bot.telegram.handler.TariffAvailabilityHandler;
+import rt.bot.telegram.handler.VipChannelHandler;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class StartCase implements Case {
+public class AddChannelCase implements Case {
 
     private final BotInfo botInfo;
     private final MessageSender sender;

@@ -4,8 +4,8 @@ import lombok.Getter;
 
 public enum Tariff {
     NONE(0, 0),
-    TARIFF_1(50, 75),
-    TARIFF_2(100, 75),
+    TARIFF_1(50, 100),
+    TARIFF_2(100, 50),
     TARIFF_3(200, 0),
     VIP(10000000, 0);
 

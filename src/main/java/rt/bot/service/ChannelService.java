@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Channel;
@@ -20,14 +19,17 @@ import java.time.ZoneId;
 public class ChannelService {
 
     private final ChannelRepository channelRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public void addBotAsAdminToChannel(User user, Chat chat) {
+    public boolean toggleBotAdminRights(Chat chat, boolean botIsAdmin) {
         Long channelId = chat.getId();
         if (channelRepository.existsById(channelId)) {
-            channelRepository.updateBotIsAdmin(channelId, true);
-            log.info("Бот назначен админом в канале с id {}", channelId);
+            channelRepository.updateBotIsAdmin(channelId, botIsAdmin);
+            log.info("Изменён статус бота в канале с id {}. Бот админ: {}", channelId, botIsAdmin);
+            return true;
+        } else {
+            log.error("Не найден канал с id {} для изменения статуса бота", channelId);
+            return false;
         }
     }
 

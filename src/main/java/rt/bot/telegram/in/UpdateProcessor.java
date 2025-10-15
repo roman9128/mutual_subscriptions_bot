@@ -1,4 +1,4 @@
-package rt.bot.telegram;
+package rt.bot.telegram.in;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import rt.bot.entity.BotUser;
-import rt.bot.cases.Case;
-import rt.bot.cases.InformationCase;
-import rt.bot.cases.NoneCase;
-import rt.bot.cases.StartCase;
+import rt.bot.telegram.in.cases.*;
 
 import java.util.EnumMap;
 
@@ -19,14 +16,16 @@ import java.util.EnumMap;
 public class UpdateProcessor {
 
     private final UserAuthentication userAuthentication;
-    private final StartCase startCase;
+    private final AddChannelCase addChannelCase;
+    private final AdminRightsCase adminRightsCase;
     private final InformationCase informationCase;
     private final NoneCase noneCase;
     private final EnumMap<UpdateClass, Case> caseProcessors = new EnumMap<>(UpdateClass.class);
 
     @PostConstruct
     public void fillCaseProcessors() {
-        caseProcessors.put(UpdateClass.START_PROCESS, startCase);
+        caseProcessors.put(UpdateClass.ADD_CHANNEL, addChannelCase);
+        caseProcessors.put(UpdateClass.ADMIN_RIGHTS, adminRightsCase);
         caseProcessors.put(UpdateClass.INFO_REQUEST, informationCase);
         caseProcessors.put(UpdateClass.NONE, noneCase);
     }

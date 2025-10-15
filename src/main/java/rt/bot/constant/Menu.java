@@ -1,4 +1,4 @@
-package rt.bot.telegram.constants;
+package rt.bot.constant;
 
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

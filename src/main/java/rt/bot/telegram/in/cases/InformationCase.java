@@ -1,19 +1,17 @@
-package rt.bot.cases;
+package rt.bot.telegram.in.cases;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import rt.bot.dto.ChannelStatus;
 import rt.bot.dto.ChannelStatusLists;
 import rt.bot.entity.BotUser;
 import rt.bot.service.SubscriptionService;
-import rt.bot.telegram.TelegramUtils;
-import rt.bot.telegram.client.MessageSender;
-import rt.bot.telegram.constants.Menu;
-import rt.bot.telegram.constants.Text;
+import rt.bot.telegram.in.TelegramUtils;
+import rt.bot.telegram.out.MessageSender;
+import rt.bot.constant.Menu;
+import rt.bot.constant.Text;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j

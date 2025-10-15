@@ -1,10 +1,9 @@
-package rt.bot.telegram.handlers;
+package rt.bot.telegram.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import rt.bot.entity.Tariff;
-import rt.bot.service.ChannelService;
 
 @Slf4j
 @Component

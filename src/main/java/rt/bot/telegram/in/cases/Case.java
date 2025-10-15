@@ -1,4 +1,4 @@
-package rt.bot.cases;
+package rt.bot.telegram.in.cases;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 import rt.bot.entity.BotUser;

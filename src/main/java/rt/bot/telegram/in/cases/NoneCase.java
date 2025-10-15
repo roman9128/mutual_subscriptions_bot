@@ -1,4 +1,4 @@
-package rt.bot.cases;
+package rt.bot.telegram.in.cases;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

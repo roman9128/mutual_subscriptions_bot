@@ -1,19 +1,17 @@
-package rt.bot.telegram.handlers;
+package rt.bot.telegram.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Tariff;
 import rt.bot.service.ChannelService;
 import rt.bot.service.UserService;
-import rt.bot.telegram.TelegramUtils;
-import rt.bot.telegram.client.ChannelInfoGetter;
-import rt.bot.telegram.client.MessageSender;
-import rt.bot.telegram.constants.Menu;
-import rt.bot.telegram.constants.Text;
+import rt.bot.telegram.in.TelegramUtils;
+import rt.bot.telegram.out.ChannelInfoGetter;
+import rt.bot.telegram.out.MessageSender;
+import rt.bot.constant.Menu;
+import rt.bot.constant.Text;
 
 @Component
 @RequiredArgsConstructor

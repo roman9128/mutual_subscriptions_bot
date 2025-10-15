@@ -1,7 +1,6 @@
-package rt.bot.telegram.handlers;
+package rt.bot.telegram.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -9,11 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministrator;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberLeft;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberUpdated;
+import rt.bot.constant.Text;
 import rt.bot.service.ChannelService;
-import rt.bot.telegram.client.MessageSender;
-import rt.bot.telegram.constants.Text;
+import rt.bot.telegram.out.MessageSender;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BotAdminHandler {
@@ -33,12 +31,20 @@ public class BotAdminHandler {
     }
 
     private void handleBotAssigned(Chat chat, User user) {
-        channelService.addBotAsAdminToChannel(user, chat);
-        sender.send(user.getId(), Text.CHANNEL_ADDED.formatted(chat.getTitle()));
-        log.info("Бот добавлен админом в канал {}", chat.getTitle());
+        boolean ok = channelService.toggleBotAdminRights(chat, true);
+        if (ok) {
+            sender.send(user.getId(), Text.BOT_ADDED.formatted(chat.getTitle()));
+        } else {
+            sender.send(user.getId(), Text.NO_CHANNEL);
+        }
     }
 
     private void handleBotDismissed(Chat chat, User user) {
-        log.warn("Бот удалён из админов канала {}", chat.getTitle());
+        boolean ok = channelService.toggleBotAdminRights(chat, false);
+        if (ok) {
+            sender.send(user.getId(), Text.BOT_DISMISSED.formatted(chat.getTitle()));
+        } else {
+            sender.send(user.getId(), Text.NO_CHANNEL);
+        }
     }
 }
