@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import rt.bot.entity.BotUser;
-import rt.bot.entity.Tariff;
+import rt.bot.entity.ChannelTariff;
 import rt.bot.service.ChannelService;
 import rt.bot.service.UserService;
-import rt.bot.telegram.in.TelegramUtils;
+import rt.bot.telegram.in.utils.TelegramUtils;
 import rt.bot.telegram.out.ChannelInfoGetter;
 import rt.bot.telegram.out.MessageSender;
 import rt.bot.constant.Menu;
@@ -15,7 +15,7 @@ import rt.bot.constant.Text;
 
 @Component
 @RequiredArgsConstructor
-public class VipChannelHandler {
+public class ChannelVipHandler {
 
     private final MessageSender sender;
     private final UserService userService;
@@ -33,12 +33,12 @@ public class VipChannelHandler {
     }
 
     private void cancel(BotUser botUser, Long userId) {
-        userService.setTariffAndStatus(botUser, Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.CANCEL_PARTICIPATION_SUCCESS, Menu.of(Text.START_AGAIN));
     }
 
     private void askLink(BotUser botUser, Long userId) {
-        userService.setTariffAndStatus(botUser, Tariff.VIP, BotUser.DialogStatus.WAITING_CHANNEL_LINK);
+        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.VIP, BotUser.DialogStatus.WAITING_CHANNEL_LINK);
         sender.send(userId, Text.LINK_REQUEST, Menu.of(Text.CANCEL_PARTICIPATION));
     }
 
@@ -49,17 +49,17 @@ public class VipChannelHandler {
         }
         Chat channel = channelInfoGetter.getChatInfoByChannelName(TelegramUtils.getChatNameFromLink(userMsg));
         if (channel == null) {
-            userService.setTariffAndStatus(botUser, Tariff.NONE, BotUser.DialogStatus.NONE);
+            userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
             sender.send(userId, Text.UNKNOWN_ERR, Menu.of(Text.START_AGAIN));
             return;
         }
         if (channelService.channelExists(channel.getId())) {
-            userService.setTariffAndStatus(botUser, Tariff.NONE, BotUser.DialogStatus.NONE);
+            userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
             sender.send(userId, Text.CHANNEL_ADDED_EARLY, Menu.of(Text.START_AGAIN));
             return;
         }
         channelService.createNewVipChannel(botUser, channel);
-        userService.setTariffAndStatus(botUser, Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.SUCCESS_VIP, Menu.of(Text.START_AGAIN));
     }
 }

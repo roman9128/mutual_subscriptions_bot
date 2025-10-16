@@ -1,4 +1,4 @@
-package rt.bot.telegram.in;
+package rt.bot.telegram.in.update;
 
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberAdministr
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMemberLeft;
 import rt.bot.entity.BotUser;
 import rt.bot.constant.Text;
+import rt.bot.telegram.in.utils.TelegramUtils;
 
 @UtilityClass
 public class UpdateClassifier {

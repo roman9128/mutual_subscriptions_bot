@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rt.bot.entity.BotUser;
-import rt.bot.entity.Tariff;
+import rt.bot.entity.ChannelTariff;
 import rt.bot.repository.UserRepository;
 
 @Slf4j
@@ -32,22 +32,22 @@ public class UserService {
         log.info("Изменил статус пользователя с id {} на {}", botUser.getUserId(), dialogStatus);
     }
 
-    public void setTariff(BotUser botUser, Tariff tariff) {
-        botUser.setTariff(tariff);
+    public void setTariff(BotUser botUser, ChannelTariff.Tariff tariff) {
+        botUser.setChosenTariff(tariff);
         userRepository.save(botUser);
         log.info("Пользователю с id {} выбрал тариф {}", botUser.getUserId(), tariff);
     }
 
-    public void setTariffAndStatus(BotUser botUser, Tariff tariff, BotUser.DialogStatus dialogStatus) {
-        botUser.setTariff(tariff);
+    public void setTariffAndStatus(BotUser botUser, ChannelTariff.Tariff tariff, BotUser.DialogStatus dialogStatus) {
+        botUser.setChosenTariff(tariff);
         botUser.setDialogStatus(dialogStatus);
         userRepository.save(botUser);
         log.info("Изменил пользователю с id {} тариф на {} и статус на {}", botUser.getUserId(), tariff, dialogStatus);
     }
 
-    public void setRoleTariffStatus(BotUser botUser, BotUser.Role role, Tariff tariff, BotUser.DialogStatus dialogStatus) {
+    public void setRoleTariffStatus(BotUser botUser, BotUser.Role role, ChannelTariff.Tariff tariff, BotUser.DialogStatus dialogStatus) {
         botUser.setRole(role);
-        botUser.setTariff(tariff);
+        botUser.setChosenTariff(tariff);
         botUser.setDialogStatus(dialogStatus);
         userRepository.save(botUser);
         log.info("Изменил пользователю с id {} роль на {}, тариф на {} и статус на {}", botUser.getUserId(), role, tariff, dialogStatus);

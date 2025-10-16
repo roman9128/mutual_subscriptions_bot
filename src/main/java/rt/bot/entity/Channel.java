@@ -27,18 +27,12 @@ public class Channel {
     @JoinColumn(name = "owner_id", nullable = false)
     private BotUser owner;
     private boolean botIsAdmin;
-    @Enumerated(EnumType.STRING)
-    private Tariff tariff;
-    private int subscriptionsAmountGoal;
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChannelTariff> channelTariffs = new HashSet<>();
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subscription> subscriptions = new HashSet<>();
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-    private LocalDateTime paidSince;
-
-    public void addSubscriptionAmountGoal(int value) {
-        subscriptionsAmountGoal += value;
-    }
 }

@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import rt.bot.dto.ChannelStatusLists;
 import rt.bot.entity.BotUser;
 import rt.bot.service.SubscriptionService;
-import rt.bot.telegram.in.TelegramUtils;
+import rt.bot.telegram.in.utils.TelegramUtils;
 import rt.bot.telegram.out.MessageSender;
 import rt.bot.constant.Menu;
 import rt.bot.constant.Text;

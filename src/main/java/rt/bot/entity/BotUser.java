@@ -36,7 +36,9 @@ public class BotUser {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Enumerated(EnumType.STRING)
-    private Tariff tariff;
+    private ChannelTariff.Tariff chosenTariff;
+    @Enumerated(EnumType.STRING)
+    private ChannelTariff.ChosenPeriod chosenPeriod;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

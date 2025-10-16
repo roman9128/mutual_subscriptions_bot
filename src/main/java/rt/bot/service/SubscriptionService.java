@@ -3,17 +3,18 @@ package rt.bot.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import rt.bot.constant.Num;
 import rt.bot.dto.ChannelStatus;
 import rt.bot.dto.ChannelStatusLists;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Channel;
 import rt.bot.entity.Subscription;
-import rt.bot.entity.Tariff;
 import rt.bot.repository.ChannelRepository;
 import rt.bot.repository.SubscriptionRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,9 +43,9 @@ public class SubscriptionService {
 
     public String getChannelListToSubscribe(BotUser botUser) {
         List<Channel> channelsToSend = channelRepository
-                .findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(botUser)
+                .findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(botUser, LocalDateTime.now(ZoneId.of("Europe/Moscow")))
                 .stream()
-                .limit(getSubscriptionsAmountToAdd(botUser))
+                .limit(Num.SENDING_LIMIT)
                 .toList();
         createSubscriptions(botUser, channelsToSend);
         return channelsToSend.stream()
@@ -69,13 +70,13 @@ public class SubscriptionService {
         return s;
     }
 
-    private long getSubscriptionsAmountToAdd(BotUser botUser) {
-        long subscriptionsAmountUserHas = subscriptionRepository.countByUserAndStatus(botUser, Subscription.Status.FOLLOWED);
-        long subscriptionsAmountUserMustHave = channelRepository.findByOwner(botUser).stream()
-                .map(Channel::getTariff)
-                .mapToLong(Tariff::getSubscriptionAmountInReturn)
-                .sum();
-        long amount = subscriptionsAmountUserMustHave - subscriptionsAmountUserHas;
-        return Math.max(0, amount);
-    }
+//    private long getSubscriptionsAmountToAdd(BotUser botUser) {
+//        long subscriptionsAmountUserHas = subscriptionRepository.countByUserAndStatus(botUser, Subscription.Status.FOLLOWED);
+//        long subscriptionsAmountUserMustHave = channelRepository.findByOwner(botUser).stream()
+//                .map(Channel::getTariff)
+//                .mapToLong(Tariff::getSubscriptionAmountInReturn)
+//                .sum();
+//        long amount = subscriptionsAmountUserMustHave - subscriptionsAmountUserHas;
+//        return Math.max(0, amount);
+//    }
 }

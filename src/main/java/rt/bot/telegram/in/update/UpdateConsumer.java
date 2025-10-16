@@ -1,4 +1,4 @@
-package rt.bot.telegram.in;
+package rt.bot.telegram.in.update;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

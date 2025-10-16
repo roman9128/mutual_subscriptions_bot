@@ -20,24 +20,39 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     void updateBotIsAdmin(@Param("channelId") Long channelId, @Param("botIsAdmin") boolean botIsAdmin);
 
     @Modifying
-    @Query("UPDATE Channel c SET c.paidSince = :paidSince WHERE c.owner.userId = :userId AND c.paidSince IS NULL")
-    void updatePaidSinceForUserChannels(@Param("userId") Long userId, @Param("paidSince") LocalDateTime paidSince);
+    @Query("""
+            DELETE FROM Channel c
+            WHERE c.owner.userId = :userId
+              AND NOT EXISTS (
+                  SELECT 1 FROM ChannelTariff ct
+                  WHERE ct.channel = c
+                    AND ct.startAt IS NOT NULL
+              )
+            """)
+    void deleteUserChannelsWithoutActiveTariffs(@Param("userId") Long userId);
 
-    @Modifying
-    @Query("DELETE FROM Channel c WHERE c.owner.userId = :userId AND c.paidSince IS NULL")
-    void deleteByOwnerUserIdAndPaidSinceIsNull(@Param("userId") Long userId);
 
-    @Query("SELECT c FROM Channel c " +
-            "WHERE c.subscriptionsAmountGoal > (" +
-            "    SELECT COUNT(s) FROM Subscription s " +
-            "    WHERE s.channel = c AND s.status = 'FOLLOWED'" +
-            ") " +
-            "AND c.owner != :user " +
-            "AND c NOT IN (" +
-            "    SELECT s.channel FROM Subscription s " +
-            "    WHERE s.user = :user" +
-            ")")
-    List<Channel> findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(@Param("user") BotUser user);
-
-    List<Channel> findByOwner(BotUser owner);
+    @Query("""
+            SELECT c FROM Channel c
+            WHERE (
+                SELECT COALESCE(SUM(ct.subscriptionAmountGoal), 0)
+                FROM ChannelTariff ct
+                WHERE ct.channel = c
+                  AND ct.startAt <= :now
+                  AND ct.endAt >= :now
+            ) > (
+                SELECT COUNT(s)
+                FROM Subscription s
+                WHERE s.channel = c
+                  AND s.status = 'FOLLOWED'
+            )
+            AND c.owner <> :user
+            AND c NOT IN (
+                SELECT s.channel FROM Subscription s WHERE s.user = :user
+            )
+            """)
+    List<Channel> findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(
+            @Param("user") BotUser user,
+            @Param("now") LocalDateTime now
+    );
 }
