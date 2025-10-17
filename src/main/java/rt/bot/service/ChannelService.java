@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
-import rt.bot.constant.Num;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Channel;
 import rt.bot.entity.ChannelTariff;
@@ -14,6 +13,7 @@ import rt.bot.repository.ChannelTariffRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -76,6 +76,7 @@ public class ChannelService {
         channelTariff.setSubscriptionAmountInReturn(tariff.getSubscriptionAmountInReturn());
         channelTariff.setStartAt(start);
         channelTariff.setEndAt(start.plusMonths(period.getPeriodLengthInMonth()));
+
         channel.getChannelTariffs().add(channelTariff);
 
         channelRepository.save(channel);
@@ -85,12 +86,14 @@ public class ChannelService {
     @Transactional
     public void setPeriod(Long userId, ChannelTariff.ChosenPeriod period) {
         LocalDateTime start = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
-        channelTariffRepository.setDatesForUserTariffs(userId, start, start.plusMonths(period.getPeriodLengthInMonth()));
+        channelTariffRepository.setDatesForUserTariff(userId, start, start.plusMonths(period.getPeriodLengthInMonth()));
     }
 
     @Transactional
     public void removeCancelledChannel(Long userId) {
-        channelRepository.deleteUserChannelsWithoutActiveTariffs(userId);
+        List<Channel> channelList = channelRepository.findUserChannelsWithoutActiveTariffs(userId);
+        channelRepository.deleteAll(channelList);
+        log.info("Удалил {} канал без активного формата пользователя с id {}", channelList.size(), userId);
     }
 
     public boolean channelExists(Long channelId) {

@@ -23,6 +23,7 @@ public class ChannelRegularHandler {
     private final MessageSender sender;
     private final MessageRemover remover;
     private final TariffAvailabilityHandler tariffAvailabilityHandler;
+    private final BotAdminHandler botAdminHandler;
     private final UserService userService;
     private final ChannelService channelService;
 
@@ -76,6 +77,7 @@ public class ChannelRegularHandler {
         if (channelService.channelExists(update.getMyChatMember().getChat().getId())) {
             userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
             sender.send(userId, Text.CHANNEL_ADDED_EARLY, Menu.of(Text.START_AGAIN));
+            botAdminHandler.process(update);
             return;
         }
         channelService.createNewChannel(botUser, update.getMyChatMember().getChat());
@@ -117,14 +119,14 @@ public class ChannelRegularHandler {
 
     private void handleCancelParticipation(BotUser botUser, Long userId) {
         channelService.removeCancelledChannel(userId);
-        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, ChannelTariff.ChosenPeriod.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.CANCEL_PARTICIPATION_SUCCESS, Menu.of(Text.START_AGAIN));
     }
 
     private void handleBotDismissedDuringRegistration(BotUser botUser, Long userId) {
         remover.removeMsg(userId, botUser.getLastMessageIdToDelete());
         channelService.removeCancelledChannel(userId);
-        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, ChannelTariff.ChosenPeriod.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.FAILED_PARTICIPATION_DUE_TO_BOT_ADMIN_RIGHTS, Menu.of(Text.START_AGAIN));
     }
 

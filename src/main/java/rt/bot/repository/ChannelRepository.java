@@ -19,9 +19,8 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     @Query("UPDATE Channel c SET c.botIsAdmin = :botIsAdmin WHERE c.channelId = :channelId")
     void updateBotIsAdmin(@Param("channelId") Long channelId, @Param("botIsAdmin") boolean botIsAdmin);
 
-    @Modifying
     @Query("""
-            DELETE FROM Channel c
+            SELECT c FROM Channel c
             WHERE c.owner.userId = :userId
               AND NOT EXISTS (
                   SELECT 1 FROM ChannelTariff ct
@@ -29,7 +28,7 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
                     AND ct.startAt IS NOT NULL
               )
             """)
-    void deleteUserChannelsWithoutActiveTariffs(@Param("userId") Long userId);
+    List<Channel> findUserChannelsWithoutActiveTariffs(@Param("userId") Long userId);
 
     @Query("""
             SELECT c FROM Channel c

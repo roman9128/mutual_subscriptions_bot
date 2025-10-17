@@ -35,7 +35,7 @@ public class BotAdminHandler {
         if (ok) {
             sender.send(user.getId(), Text.BOT_ADDED.formatted(chat.getTitle()));
         } else {
-            sender.send(user.getId(), Text.NO_CHANNEL);
+            sender.send(user.getId(), Text.NO_CHANNEL.formatted(chat.getTitle()));
         }
     }
 
@@ -44,7 +44,7 @@ public class BotAdminHandler {
         if (ok) {
             sender.send(user.getId(), Text.BOT_DISMISSED.formatted(chat.getTitle()));
         } else {
-            sender.send(user.getId(), Text.NO_CHANNEL);
+            sender.send(user.getId(), Text.NO_CHANNEL.formatted(chat.getTitle()));
         }
     }
 }

@@ -13,6 +13,7 @@ public class TariffAvailabilityHandler {
 //    private final ChannelService channelService;
 
     public boolean isAvailable(ChannelTariff.Tariff tariff) {
-        return tariff == ChannelTariff.Tariff.TARIFF_1;
+//        return tariff == ChannelTariff.Tariff.TARIFF_1;
+        return true;
     }
 }

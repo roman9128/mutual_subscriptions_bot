@@ -111,15 +111,15 @@ public class Text {
             Информация в этом разделе обновляется не сразу и может быть неточной
             """;
     public static final String ERR_ADD_BOT = "Вам нужно добавить бота админом в Ваш канал, чтобы продолжить. Для этого нажмите на кнопку под соответствующим сообщением";
-    public static final String ERR_PAY_PERIOD = "Вам нужно выбрать период оплаты, чтобы продолжить. Для этого нажмите на соответствующую кнопку во всплывающей клавиатуре";
-    public static final String ERR_PAYMENT = "Чуть ранее Вам направлялась ссылка для оплаты. Если Вы оплатили, то нажмите на соответствующую кнопку во всплывающей клавиатуре";
+    public static final String ERR_PAY_PERIOD = "Вам нужно выбрать период оплаты, чтобы продолжить. Для этого нажмите на соответствующую кнопку на всплывающей клавиатуре";
+    public static final String ERR_PAYMENT = "Чуть ранее Вам направлялась ссылка для оплаты. Если Вы оплатили, то нажмите на соответствующую кнопку на всплывающей клавиатуре";
     public static final String ERR_LINK = "Некорректная ссылка. Попробуй ещё раз";
     public static final String UNKNOWN_ERR = "Непредвиденная ошибка. Обратитесь к админу бота";
     public static final String LINK_REQUEST = "Пришли ссылку на канал в формате https://t.me/название";
     public static final String LINK_BASE = "https://t.me/";
     public static final String LINK_PATTERN = "^https://t\\.me/[a-zA-Z0-9_]{5,32}$";
     public static final String NO_INFO = "Пока нет информации";
-    public static final String NO_CHANNEL = "Канала нет в базе";
+    public static final String NO_CHANNEL = "Канала %s нет в базе";
     public static final String PAY_1_MONTH = "Оплатить 1 месяц";
     public static final String PAY_1_YEAR = "Оплатить 1 год";
 }

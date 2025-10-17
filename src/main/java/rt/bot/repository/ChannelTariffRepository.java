@@ -20,29 +20,9 @@ public interface ChannelTariffRepository extends JpaRepository<ChannelTariff, Lo
         WHERE ct.channel.owner.userId = :userId
           AND ct.startAt IS NULL
         """)
-    void setDatesForUserTariffs(@Param("userId") Long userId,
-                                @Param("startAt") LocalDateTime startAt,
-                                @Param("endAt") LocalDateTime endAt);
-
-    @Modifying
-    @Query("""
-            UPDATE ChannelTariff ct
-            SET ct.startAt = :startAt
-            WHERE ct.channel.owner.userId = :userId
-              AND ct.startAt IS NULL
-            """)
-    void setStartAtForUserTariffs(@Param("userId") Long userId,
-                                  @Param("startAt") LocalDateTime startAt);
-
-    @Modifying
-    @Query("""
-            UPDATE ChannelTariff ct
-            SET ct.endAt = :endAt
-            WHERE ct.channel.owner.userId = :userId
-              AND ct.endAt IS NULL
-            """)
-    void setEndAtForUserTariffs(@Param("userId") Long userId,
-                                @Param("endAt") LocalDateTime endAt);
+    void setDatesForUserTariff(@Param("userId") Long userId,
+                               @Param("startAt") LocalDateTime startAt,
+                               @Param("endAt") LocalDateTime endAt);
 
     @Modifying
     @Query("""
@@ -50,7 +30,7 @@ public interface ChannelTariffRepository extends JpaRepository<ChannelTariff, Lo
             WHERE ct.channel.owner.userId = :userId
               AND ct.startAt IS NULL
             """)
-    void deleteTariffsWithNullStartForUser(@Param("userId") Long userId);
+    void deleteTariffWithNullStartForUser(@Param("userId") Long userId);
 
     @Query("""
             SELECT COALESCE(SUM(ct.subscriptionAmountGoal), 0)
