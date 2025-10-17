@@ -6,5 +6,4 @@ import lombok.experimental.UtilityClass;
 public class Num {
 
     public static final long SENDING_LIMIT = 10L;
-    public static final long VIP_LENGTH_YEARS = 100L;
 }

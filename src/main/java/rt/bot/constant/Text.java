@@ -79,7 +79,7 @@ public class Text {
             Есть 3 формата взаимодействия: первый, второй и третий.
             Вы можете узнать про каждый подробнее выбрав этот пункт в меню.""";
     public static final String TARIFF_UNAVAILABLE = "Данный формат сейчас недоступен. Выберите другой, пожалуйста";
-    public static final String PAYMENT_LINK = "Для оплаты перейдите по данной ссылке: %s";
+    public static final String PAYMENT_LINK = "Для оплаты перейдите по данной ссылке:\n%s";
     public static final String PAYMENT_CONFIRM = "Подтвердить оплату";
     public static final String ADD_BOT_AS_ADMIN_DESC = "Добавьте бота в администраторы Вашего канала, чтобы он мог отслеживать подписчиков. Это безопасно. Права нужны только для просмотра.";
     public static final String ADD_BOT_AS_ADMIN = "Добавьте бота в канал";
@@ -87,7 +87,7 @@ public class Text {
     public static final String BOT_ADDED = "Бот назначен админом канала %s";
     public static final String BOT_DISMISSED = "Бот перестал быть админом канала %s";
     public static final String SUBSCRIPTION_REQUIRED = "Каждый день Вам будет приходить список не более чем из 10 каналов, на которые нужно подписаться. Такие рассылки будут продолжаться, пока у Вас не наберётся необходимое количество подписок";
-    public static final String SUBSCRIPTION_CONFIRMATION = "Буду подписываться";
+    public static final String PAYMENT_PERIOD_REQUIRED = "Выберите срок действия формата";
     public static final String CANCEL_PARTICIPATION_SUCCESS = "Регистрация Вашего канала отменена";
     public static final String FAILED_PARTICIPATION_DUE_TO_BOT_ADMIN_RIGHTS = "Регистрация Вашего канала отменена, так как бот был лишён прав админа";
     public static final String CANCEL_PARTICIPATION = "Отказаться";
@@ -96,7 +96,7 @@ public class Text {
             Бот взаимных подписок гарантирует то количество живых подписок, которые указаны в формате.
             Пользователи, которые нарушают правила, не исправляют ошибки, удаляются из базы подписок.
             Если пользователь первого формата нарушает правила по взаимным подпискам, то для него становится невозможным бесплатно использовать нашу систему.
-            Если пользователь второго формата нарушает правила, то для возврата в базу и возврат подписок ему нужно будет заново оплатить подписку на наш бот. 
+            Если пользователь второго формата нарушает правила, то для возврата в базу и возврат подписок ему нужно будет заново оплатить подписку на наш бот.
             Бот будет присылать Вам каналы тех пользователей, от которых вы должны отписываться, в новую подборку они попадать уже не будут.
             """;
     public static final String SUCCESS_VIP = "VIP канал добавлен";
@@ -111,7 +111,7 @@ public class Text {
             Информация в этом разделе обновляется не сразу и может быть неточной
             """;
     public static final String ERR_ADD_BOT = "Вам нужно добавить бота админом в Ваш канал, чтобы продолжить. Для этого нажмите на кнопку под соответствующим сообщением";
-    public static final String ERR_SUBSCRIPTION = "Вам нужно подтвердить подписку на каналы из направленного списка, чтобы продолжить. Для этого нажмите на соответствующую кнопку во всплывающей клавиатуре";
+    public static final String ERR_PAY_PERIOD = "Вам нужно выбрать период оплаты, чтобы продолжить. Для этого нажмите на соответствующую кнопку во всплывающей клавиатуре";
     public static final String ERR_PAYMENT = "Чуть ранее Вам направлялась ссылка для оплаты. Если Вы оплатили, то нажмите на соответствующую кнопку во всплывающей клавиатуре";
     public static final String ERR_LINK = "Некорректная ссылка. Попробуй ещё раз";
     public static final String UNKNOWN_ERR = "Непредвиденная ошибка. Обратитесь к админу бота";
@@ -120,4 +120,6 @@ public class Text {
     public static final String LINK_PATTERN = "^https://t\\.me/[a-zA-Z0-9_]{5,32}$";
     public static final String NO_INFO = "Пока нет информации";
     public static final String NO_CHANNEL = "Канала нет в базе";
+    public static final String PAY_1_MONTH = "Оплатить 1 месяц";
+    public static final String PAY_1_YEAR = "Оплатить 1 год";
 }

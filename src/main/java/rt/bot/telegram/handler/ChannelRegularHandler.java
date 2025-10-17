@@ -35,8 +35,8 @@ public class ChannelRegularHandler {
             handleBotAssignment(update, botUser, userId);
         } else if (YesNo.isBotDismissedDuringRegistration(update, botUser)) {
             handleBotDismissedDuringRegistration(botUser, userId);
-        } else if (YesNo.isSubscriptionConfirmed(botUser, userMsg)) {
-            handleSubscriptionConfirmation(botUser, userId);
+        } else if (YesNo.isPaymentPeriod(botUser, userMsg)) {
+            askPayment(botUser, userId, userMsg);
         } else if (YesNo.isPaymentConfirmed(botUser, userMsg)) {
             handlePaymentConfirmation(botUser, userId);
         } else {
@@ -52,7 +52,7 @@ public class ChannelRegularHandler {
             default -> ChannelTariff.Tariff.TARIFF_1;
         };
         if (tariffAvailabilityHandler.isAvailable(tariff)) {
-            userService.setTariffAndStatus(botUser, tariff, BotUser.DialogStatus.WAITING_ADD_BOT_AS_ADMIN);
+            userService.updateUser(botUser, tariff, BotUser.DialogStatus.WAITING_ADD_BOT_AS_ADMIN);
             sender.send(userId, Text.TARIFF_SELECTED, Menu.removeReplyKeyboard());
             requestAddBotAsAdmin(botUser, userId);
         } else {
@@ -68,45 +68,42 @@ public class ChannelRegularHandler {
                         Text.ADD_BOT_AS_ADMIN,
                         "https://t.me/" + botInfo.getBotName() + "?startchannel&admin=invite_users+edit_messages"
                 ));
-        userService.setLastMessageIdToDelete(botUser, sentMessage.getMessageId());
+        userService.updateUser(botUser, sentMessage.getMessageId());
     }
 
     private void handleBotAssignment(Update update, BotUser botUser, Long userId) {
         remover.removeMsg(userId, botUser.getLastMessageIdToDelete());
         if (channelService.channelExists(update.getMyChatMember().getChat().getId())) {
-            userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+            userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
             sender.send(userId, Text.CHANNEL_ADDED_EARLY, Menu.of(Text.START_AGAIN));
             return;
         }
         channelService.createNewChannel(botUser, update.getMyChatMember().getChat());
-        informAboutChannelsToSubscribe(botUser, userId);
+        askPaymentPeriod(botUser, userId);
     }
 
-    private void informAboutChannelsToSubscribe(BotUser botUser, Long userId) {
-        if (botUser.getChosenTariff() == ChannelTariff.Tariff.TARIFF_3) {
-            handleSubscriptionConfirmation(botUser, userId);
-            return;
-        }
-        userService.setDialogStatus(botUser, BotUser.DialogStatus.WAITING_SUBSCRIPTION_CONFIRMATION);
-        sender.send(
-                botUser.getUserId(),
-                Text.SUBSCRIPTION_REQUIRED,
-                Menu.of(Text.SUBSCRIPTION_CONFIRMATION, Text.CANCEL_PARTICIPATION));
-    }
-
-    private void handleSubscriptionConfirmation(BotUser botUser, Long userId) {
-        if (botUser.getChosenTariff() == ChannelTariff.Tariff.TARIFF_1) {
+    private void askPaymentPeriod(BotUser botUser, Long userId) {
+        if (botUser.getChosenTariff() == ChannelTariff.Tariff.TARIFF_1) { // dlia niego toljko 1 god
+            botUser.setChosenPeriod(ChannelTariff.ChosenPeriod.YEAR);
             finishProcess(botUser, userId);
             return;
         }
-        String link = "";
-        userService.setDialogStatus(botUser, BotUser.DialogStatus.WAITING_PAYMENT_CONFIRMATION);
+        userService.updateUser(botUser, BotUser.DialogStatus.WAITING_PAYMENT_PERIOD);
+        sender.send(userId, Text.PAYMENT_PERIOD_REQUIRED, Menu.of(Text.PAY_1_MONTH, Text.PAY_1_YEAR, Text.CANCEL_PARTICIPATION));
+    }
+
+    private void askPayment(BotUser botUser, Long userId, String userMsg) {
+        ChannelTariff.ChosenPeriod period = switch (userMsg) {
+            case Text.PAY_1_MONTH -> ChannelTariff.ChosenPeriod.MONTH;
+            case null, default -> ChannelTariff.ChosenPeriod.YEAR;
+        };
+        userService.updateUser(botUser, BotUser.DialogStatus.WAITING_PAYMENT_CONFIRMATION, period);
+        String link = period.name();       //todo payment service
         if (botUser.getChosenTariff() == ChannelTariff.Tariff.TARIFF_2) {
-            link = "t2";
+            link += "t2";
         } else if (botUser.getChosenTariff() == ChannelTariff.Tariff.TARIFF_3) {
-            link = "t3";
+            link += "t3";
         }
-        //todo payment service
         sender.send(
                 userId,
                 Text.PAYMENT_LINK.formatted(link),
@@ -120,29 +117,30 @@ public class ChannelRegularHandler {
 
     private void handleCancelParticipation(BotUser botUser, Long userId) {
         channelService.removeCancelledChannel(userId);
-        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.CANCEL_PARTICIPATION_SUCCESS, Menu.of(Text.START_AGAIN));
     }
 
     private void handleBotDismissedDuringRegistration(BotUser botUser, Long userId) {
+        remover.removeMsg(userId, botUser.getLastMessageIdToDelete());
         channelService.removeCancelledChannel(userId);
-        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.FAILED_PARTICIPATION_DUE_TO_BOT_ADMIN_RIGHTS, Menu.of(Text.START_AGAIN));
     }
 
     private void finishProcess(BotUser botUser, Long userId) {
         BotUser.Role role = botUser.getRole();
         if (role != BotUser.Role.ADMIN) role = BotUser.Role.USER;
-        userService.setRoleTariffStatus(botUser, role, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
-        channelService.setStartAt(botUser.getUserId());
+        channelService.setPeriod(userId, botUser.getChosenPeriod());
+        userService.updateUser(botUser, role, ChannelTariff.Tariff.NONE, ChannelTariff.ChosenPeriod.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.SUCCESS, Menu.of(Text.START_AGAIN, Text.MY_SUBSCRIPTIONS));
     }
 
     private void informAboutError(BotUser botUser, Long userId) {
         switch (botUser.getDialogStatus()) {
             case WAITING_ADD_BOT_AS_ADMIN -> sender.send(userId, Text.ERR_ADD_BOT, Menu.of(Text.CANCEL_PARTICIPATION));
-            case WAITING_SUBSCRIPTION_CONFIRMATION ->
-                    sender.send(userId, Text.ERR_SUBSCRIPTION, Menu.of(Text.SUBSCRIPTION_CONFIRMATION, Text.CANCEL_PARTICIPATION));
+            case WAITING_PAYMENT_PERIOD ->
+                    sender.send(userId, Text.ERR_PAY_PERIOD, Menu.of(Text.PAY_1_MONTH, Text.PAY_1_YEAR, Text.CANCEL_PARTICIPATION));
             case WAITING_PAYMENT_CONFIRMATION ->
                     sender.send(userId, Text.ERR_PAYMENT, Menu.of(Text.PAYMENT_CONFIRM, Text.CANCEL_PARTICIPATION));
             case null, default -> sender.send(userId, Text.UNKNOWN_ERR);

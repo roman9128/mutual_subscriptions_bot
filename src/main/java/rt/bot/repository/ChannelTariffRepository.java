@@ -14,6 +14,18 @@ public interface ChannelTariffRepository extends JpaRepository<ChannelTariff, Lo
 
     @Modifying
     @Query("""
+        UPDATE ChannelTariff ct
+        SET ct.startAt = :startAt,
+            ct.endAt = :endAt
+        WHERE ct.channel.owner.userId = :userId
+          AND ct.startAt IS NULL
+        """)
+    void setDatesForUserTariffs(@Param("userId") Long userId,
+                                @Param("startAt") LocalDateTime startAt,
+                                @Param("endAt") LocalDateTime endAt);
+
+    @Modifying
+    @Query("""
             UPDATE ChannelTariff ct
             SET ct.startAt = :startAt
             WHERE ct.channel.owner.userId = :userId

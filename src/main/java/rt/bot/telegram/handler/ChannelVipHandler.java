@@ -33,12 +33,12 @@ public class ChannelVipHandler {
     }
 
     private void cancel(BotUser botUser, Long userId) {
-        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.CANCEL_PARTICIPATION_SUCCESS, Menu.of(Text.START_AGAIN));
     }
 
     private void askLink(BotUser botUser, Long userId) {
-        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.VIP, BotUser.DialogStatus.WAITING_CHANNEL_LINK);
+        userService.updateUser(botUser, ChannelTariff.Tariff.VIP, BotUser.DialogStatus.WAITING_CHANNEL_LINK);
         sender.send(userId, Text.LINK_REQUEST, Menu.of(Text.CANCEL_PARTICIPATION));
     }
 
@@ -49,17 +49,17 @@ public class ChannelVipHandler {
         }
         Chat channel = channelInfoGetter.getChatInfoByChannelName(TelegramUtils.getChatNameFromLink(userMsg));
         if (channel == null) {
-            userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+            userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
             sender.send(userId, Text.UNKNOWN_ERR, Menu.of(Text.START_AGAIN));
             return;
         }
         if (channelService.channelExists(channel.getId())) {
-            userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+            userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
             sender.send(userId, Text.CHANNEL_ADDED_EARLY, Menu.of(Text.START_AGAIN));
             return;
         }
         channelService.createNewVipChannel(botUser, channel);
-        userService.setTariffAndStatus(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
+        userService.updateUser(botUser, ChannelTariff.Tariff.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.SUCCESS_VIP, Menu.of(Text.START_AGAIN));
     }
 }

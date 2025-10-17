@@ -45,8 +45,11 @@ public class ChannelService {
         channel.setOwner(botUser);
         channel.setBotIsAdmin(true);
 
+        ChannelTariff.Tariff tariff = botUser.getChosenTariff();
         ChannelTariff channelTariff = new ChannelTariff();
-        channelTariff.setTariff(botUser.getChosenTariff());
+        channelTariff.setTariff(tariff);
+        channelTariff.setSubscriptionAmountGoal(tariff.getSubscriptionAmountGoal());
+        channelTariff.setSubscriptionAmountInReturn(tariff.getSubscriptionAmountInReturn());
         channelTariff.setChannel(channel);
 
         channel.getChannelTariffs().add(channelTariff);
@@ -57,20 +60,22 @@ public class ChannelService {
 
     @Transactional
     public void createNewVipChannel(BotUser botUser, Chat chat) {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
-
         Channel channel = new Channel();
         channel.setChannelId(chat.getId());
         channel.setTitle(chat.getTitle());
         channel.setUsername(chat.getUserName());
         channel.setOwner(botUser);
 
+        ChannelTariff.ChosenPeriod period = ChannelTariff.ChosenPeriod.FOREVER;
+        LocalDateTime start = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        ChannelTariff.Tariff tariff = botUser.getChosenTariff();
         ChannelTariff channelTariff = new ChannelTariff();
-        channelTariff.setTariff(botUser.getChosenTariff());
+        channelTariff.setTariff(tariff);
         channelTariff.setChannel(channel);
-        channelTariff.setStartAt(now);
-        channelTariff.setEndAt(now.plusYears(Num.VIP_LENGTH_YEARS));
-
+        channelTariff.setSubscriptionAmountGoal(tariff.getSubscriptionAmountGoal());
+        channelTariff.setSubscriptionAmountInReturn(tariff.getSubscriptionAmountInReturn());
+        channelTariff.setStartAt(start);
+        channelTariff.setEndAt(start.plusMonths(period.getPeriodLengthInMonth()));
         channel.getChannelTariffs().add(channelTariff);
 
         channelRepository.save(channel);
@@ -78,8 +83,9 @@ public class ChannelService {
     }
 
     @Transactional
-    public void setStartAt(Long userId) {
-        channelTariffRepository.setStartAtForUserTariffs(userId, LocalDateTime.now(ZoneId.of("Europe/Moscow")));
+    public void setPeriod(Long userId, ChannelTariff.ChosenPeriod period) {
+        LocalDateTime start = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        channelTariffRepository.setDatesForUserTariffs(userId, start, start.plusMonths(period.getPeriodLengthInMonth()));
     }
 
     @Transactional

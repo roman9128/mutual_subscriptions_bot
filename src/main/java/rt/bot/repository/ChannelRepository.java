@@ -31,7 +31,6 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
             """)
     void deleteUserChannelsWithoutActiveTariffs(@Param("userId") Long userId);
 
-
     @Query("""
             SELECT c FROM Channel c
             WHERE (

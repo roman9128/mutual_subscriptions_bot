@@ -70,8 +70,16 @@ public class ChannelTariff {
     }
 
     public enum ChosenPeriod {
-        NONE,
-        MONTH,
-        YEAR
+        NONE(0),
+        MONTH(1),
+        YEAR(12),
+        FOREVER(1000);
+
+        @Getter
+        private final int periodLengthInMonth;
+
+        ChosenPeriod(int periodLengthInMonth) {
+            this.periodLengthInMonth = periodLengthInMonth;
+        }
     }
 }

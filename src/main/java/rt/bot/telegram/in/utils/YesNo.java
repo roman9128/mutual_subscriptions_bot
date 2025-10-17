@@ -50,9 +50,9 @@ public class YesNo {
                 botUser.getDialogStatus() == BotUser.DialogStatus.WAITING_CHANNEL_LINK);
     }
 
-    public static boolean isSubscriptionConfirmed(BotUser botUser, String userMsg) {
-        return botUser.getDialogStatus() == BotUser.DialogStatus.WAITING_SUBSCRIPTION_CONFIRMATION &&
-                userMsg.equals(Text.SUBSCRIPTION_CONFIRMATION);
+    public static boolean isPaymentPeriod(BotUser botUser, String userMsg) {
+        return botUser.getDialogStatus() == BotUser.DialogStatus.WAITING_PAYMENT_PERIOD &&
+                (userMsg.equals(Text.PAY_1_MONTH) || userMsg.equals(Text.PAY_1_YEAR));
     }
 
     public static boolean isPaymentConfirmed(BotUser botUser, String userMsg) {
