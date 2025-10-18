@@ -42,7 +42,6 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
                 SELECT COUNT(s)
                 FROM Subscription s
                 WHERE s.channel = c
-                  AND s.status = 'FOLLOWED'
             )
             AND c.owner <> :user
             AND c NOT IN (

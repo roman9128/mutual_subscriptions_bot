@@ -86,7 +86,8 @@ public class Text {
     public static final String CHANNEL_ADDED_EARLY = "Данный канал был добавлен в нашу базу ранее";
     public static final String BOT_ADDED = "Бот назначен админом канала %s";
     public static final String BOT_DISMISSED = "Бот перестал быть админом канала %s";
-    public static final String SUBSCRIPTION_REQUIRED = "Каждый день Вам будет приходить список не более чем из 10 каналов, на которые нужно подписаться. Такие рассылки будут продолжаться, пока у Вас не наберётся необходимое количество подписок";
+    public static final String SUBSCRIPTION_DESC = "Каждый день Вам будет приходить список не более чем из 10 каналов, на которые нужно подписаться. Такие рассылки будут продолжаться, пока у Вас не наберётся необходимое количество подписок";
+    public static final String SUBSCRIPTION_REQUIRED = "Сегодня Вам нужно подписаться на следующие каналы:\n%s";
     public static final String PAYMENT_PERIOD_REQUIRED = "Выберите срок действия формата";
     public static final String CANCEL_PARTICIPATION_SUCCESS = "Регистрация Вашего канала отменена";
     public static final String FAILED_PARTICIPATION_DUE_TO_BOT_ADMIN_RIGHTS = "Регистрация Вашего канала отменена, так как бот был лишён прав админа";

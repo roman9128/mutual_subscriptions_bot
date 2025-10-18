@@ -4,18 +4,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import rt.bot.constant.Num;
+import rt.bot.constant.Text;
+import rt.bot.dto.BotUserChannelsSet;
 import rt.bot.dto.ChannelStatus;
 import rt.bot.dto.ChannelStatusLists;
 import rt.bot.entity.BotUser;
 import rt.bot.entity.Channel;
 import rt.bot.entity.Subscription;
-import rt.bot.repository.ChannelRepository;
 import rt.bot.repository.SubscriptionRepository;
+import rt.bot.repository.UserRepository;
+import rt.bot.telegram.out.MessageSender;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,8 +28,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SubscriptionService {
 
-    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final MessageSender sender;
 
     public ChannelStatusLists getChannelStatusList(Long userId) {
         List<ChannelStatus> all = subscriptionRepository.findChannelStatusBy(userId);
@@ -41,25 +47,39 @@ public class SubscriptionService {
         return new ChannelStatusLists(followed, unfollowed);
     }
 
-    public String getChannelListToSubscribe(BotUser botUser) {
-        List<Channel> channelsToSend = channelRepository
-                .findChannelsForSubscriptionNotOwnedAndNotSubscribedBy(botUser, LocalDateTime.now(ZoneId.of("Europe/Moscow")))
+    public void sendChannelsToSubscribe() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        List<BotUserChannelsSet> usersAndChannelsToSubscribe = userRepository.findUsersWithMissingSubscriptions(now);
+        if (usersAndChannelsToSubscribe == null || usersAndChannelsToSubscribe.isEmpty()) return;
+
+        Map<BotUser, Set<Channel>> usersAndLimitedCountOfChannelsToSubscribe = usersAndChannelsToSubscribe
                 .stream()
-                .limit(Num.SENDING_LIMIT)
-                .toList();
-        createSubscriptions(botUser, channelsToSend);
-        return channelsToSend.stream()
-                .map(c -> "@" + c.getUsername())
-                .collect(Collectors.joining(System.lineSeparator()));
+                .collect(Collectors.toMap(
+                        BotUserChannelsSet::botUser,
+                        bucs -> bucs.channels()
+                                .stream()
+                                .limit(Num.SENDING_LIMIT)
+                                .collect(Collectors.toSet())));
+        createSubscriptions(usersAndLimitedCountOfChannelsToSubscribe);
+
+        Map<Long, String> sendingMap = usersAndLimitedCountOfChannelsToSubscribe.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey().getUserId(),
+                        e -> prepareChannelListMsg(e.getValue())
+                ));
+        sender.send(sendingMap);
     }
 
-    private void createSubscriptions(BotUser botUser, List<Channel> channelsToSend) {
-        if (channelsToSend == null || channelsToSend.isEmpty()) return;
-        List<Subscription> subscriptions = channelsToSend.stream()
-                .map(c -> getSubscription(botUser, c))
+    private void createSubscriptions(Map<BotUser, Set<Channel>> map) {
+        List<Subscription> subscriptions = map.entrySet()
+                .stream()
+                .flatMap(e -> e.getValue()
+                        .stream()
+                        .map(c -> getSubscription(e.getKey(), c)))
                 .toList();
         subscriptionRepository.saveAll(subscriptions);
-        log.info("Сохранил в базе данных {} новых подписок для пользователя с id {}", subscriptions.size(), botUser.getUserId());
+        log.info("Сохранил в базе данных {} новых подписок", subscriptions.size());
     }
 
     private Subscription getSubscription(BotUser botUser, Channel channel) {
@@ -68,6 +88,12 @@ public class SubscriptionService {
         s.setChannel(channel);
         s.setStatus(Subscription.Status.UNFOLLOWED);
         return s;
+    }
+
+    private String prepareChannelListMsg(Set<Channel> channels) {
+        return Text.SUBSCRIPTION_REQUIRED.formatted(channels.stream()
+                .map(c -> "@" + c.getUsername())
+                .collect(Collectors.joining(System.lineSeparator())));
     }
 
 //    private long getSubscriptionsAmountToAdd(BotUser botUser) {

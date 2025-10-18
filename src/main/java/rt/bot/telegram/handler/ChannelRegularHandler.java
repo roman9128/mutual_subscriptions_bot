@@ -133,9 +133,18 @@ public class ChannelRegularHandler {
     private void finishProcess(BotUser botUser, Long userId) {
         BotUser.Role role = botUser.getRole();
         if (role != BotUser.Role.ADMIN) role = BotUser.Role.USER;
+        String msg = "";
+        if (botUser.getChosenTariff() != ChannelTariff.Tariff.TARIFF_3) {
+            msg = Text.SUBSCRIPTION_DESC;
+        }
         channelService.setPeriod(userId, botUser.getChosenPeriod());
         userService.updateUser(botUser, role, ChannelTariff.Tariff.NONE, ChannelTariff.ChosenPeriod.NONE, BotUser.DialogStatus.NONE);
         sender.send(userId, Text.SUCCESS, Menu.of(Text.START_AGAIN, Text.MY_SUBSCRIPTIONS));
+        informAboutSubscription(userId, msg);
+    }
+
+    private void informAboutSubscription(Long userId, String text) {
+        if (!text.isBlank()) sender.send(userId, text);
     }
 
     private void informAboutError(BotUser botUser, Long userId) {

@@ -11,6 +11,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -95,6 +97,19 @@ public class MessageSender {
             Long userId = allUsersIds.poll();
             if (userId != null) {
                 send(userId, userMsg);
+            } else {
+                executor.shutdown();
+            }
+        }, 0, 51, TimeUnit.MILLISECONDS);
+    }
+
+    public void send(Map<Long, String> sendingMap) {
+        Queue<Map.Entry<Long, String>> sendingQueue = new LinkedList<>(sendingMap.entrySet());
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleWithFixedDelay(() -> {
+            Map.Entry<Long, String> e = sendingQueue.poll();
+            if (e != null) {
+                send(e.getKey(), e.getValue());
             } else {
                 executor.shutdown();
             }

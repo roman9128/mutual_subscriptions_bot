@@ -25,12 +25,6 @@ public class ChannelTariff {
     private LocalDateTime startAt;
     private LocalDateTime endAt;
 
-    public boolean isActive() {
-        if (startAt == null || endAt == null) return false;
-        LocalDateTime now = LocalDateTime.now();
-        return !now.isBefore(startAt) && !now.isAfter(endAt);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
